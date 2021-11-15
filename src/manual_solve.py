@@ -4,125 +4,70 @@ import os, sys
 import json
 import numpy as np
 import re
-import math
 
 ### YOUR CODE HERE: write at least three functions which solve
 ### specific tasks by transforming the input x and returning the
 ### result. Name them according to the task ID as in the three
 ### examples below. Delete the three examples. The tasks you choose
 ### must be in the data/training directory, not data/evaluation.
-# def solve_6a1e5592(x):
-#     return x
-#
-# def solve_b2862040(x):
-#     return x
-#
-# def solve_05269061(x):
-#     return x
+
 def solve_484b58aa(x):
-    transpose_flag = False
-    column_first = [row[0] for row in x]
-    check_pattern_exists = np.where(np.array(column_first) == 0)
-    if len(check_pattern_exists[0]) > 1:
-        y = x.copy()
-        y = np.transpose(y)
-        transpose_flag = True
-    else:
-        y = x.copy()
+    """"
+    For this solution we see there is a varied length pattern
+    found in each column. We get the pattern for each and then go no
+    recreating the column using the same pattern.
+    """
+    y=x.copy();
     rows, columns = np.shape(y)
-    pattern = []
-    k = 0
-    for row in y:
+    unique_colours=np.unique(x)
+    #The last color is the pattern length for each column
+    pattern_length = unique_colours[-1]
+
+    unique_colours=np.unique(y)
+    pattern_length = unique_colours[-1]
+    k=0
+    for column in range(columns):
+        # Traversing column by column
+        col_list = y[:, column]
         process_flag = 0
-        for element in row:
-            if element == 0:
-                process_flag = 1
-                break
+        if 0 in col_list:
+           # Process only the ones with 0 or black color
+           process_flag = 1
 
         if process_flag == 1:
-            pattern_size, pattern = findpatternsandsize(row)
-            deg = degree_of_rotation(row, pattern)
-            new_row = rotateArray(pattern, pattern_size, pattern, deg, rows)
-            y[k, :] = new_row
-
-        k += 1
-    if (transpose_flag):
-        return np.transpose(y)
-    else:
-        return y
-def findpatternsandsize(row):
-    row=getstringtofindapattern(row)
-    max_len = math.ceil(len(row) / 2)
-    for x in range(2, int(max_len)):
-        if row[0:x] == row[x:2*x] :
-            return x,row[0:x]
-            break
-
-def getstringtofindapattern(seq):
-    dict = {}
-    temp_list=[]
-    seq_length=len(seq)
-    length_counter=0
-    for i in seq:
-        if i !=0:
-            temp_list.append(i)
-            length_counter+=1
-        if i == 0:
-            dict[len(temp_list)]=temp_list
-            temp_list=[]
-            length_counter+=1
-        if length_counter==seq_length:
-            dict[len(temp_list)]=temp_list
-    final_list = dict[max(dict)]
-    return final_list
-
-# function to rotate array by d elements using temp array
-def rotateArray(arr, length_of_pattern,pattern, degree_rotate, length_of_row):
-    temp = []
-    i = 0
-    while (i < degree_rotate):
-        temp.append(arr[i])
-        i = i + 1
-    i = 0
-    while (degree_rotate < length_of_pattern):
-        arr[i] = arr[degree_rotate]
-        i = i + 1
-        degree_rotate = degree_rotate + 1
-    arr[:] = arr[: i] + temp
-    while (len(arr) < length_of_row):
-        arr.extend(arr)
-        if( length_of_pattern> (length_of_row - len(arr))):
-            seq_to_extend=length_of_row - len(arr)
-            arr_to_add = pattern[:seq_to_extend]
-            arr.extend(arr_to_add)
-    return arr
-def degree_of_rotation(row,pattern):
-
-    #get first index of a2
-    final_index=0
-    value = row[0]
-    pos = np.where(np.array(pattern) ==value)
-    if len(pos[0])!= 1:
-        #if first value is duplicated in pattern and second elemnet is 0
-        #try one by one if pattern and updated value owuld be equal
-        for i in range(len(pos[0])):
-            ppos = pos[0][i]
-            position=True
-            for j in row:
-                if j==0 or j==pattern[ppos]:
-                    if ppos+1 == len(pattern):
-                        ppos=0
+            k= 1
+            pattern_list=[]
+            for i in range(len(col_list)):
+                # Looking through column elements to get a complete
+                # pattern with breaks or 0
+                pattern_list.append(col_list[i])
+                if (k%(pattern_length) ==0):
+                    if 0 in pattern_list:
+                        pattern_list = []
                     else:
-                        ppos +=1
-                else:
-                    position=False
-                    break
-            if position == True:
-                final_index = pos[0][i]
-                break
-    else:
-        final_index = pos[0][0]
-    return final_index
+                        break
+                k +=1
+            new_column=create_new_column(pattern_list,columns)
+            # Creating the new matrix column by column
+            y[:, column]=new_column
+    return y
+
+def create_new_column(pattern,column_length):
+    new_col_length=0
+    new_column=[]
+    while (new_col_length<column_length):
+        new_column.extend(pattern)
+        new_col_length=len(new_column)
+        # repeating the pattern through the column length
+        # and if there are few spots left substring the pattern
+        # Example column_length=29, len(pattern)=6
+        # loop repeats to add 6+6+6+6+pattern[:seq_to_extend]
+        if( len(pattern)> (column_length - new_col_length)):
+            seq_to_extend=column_length - new_col_length
+            arr_to_add = pattern[:seq_to_extend]
+            new_column.extend(arr_to_add)
+            new_col_length=len(new_column)
+    return new_column
 
 def main():
     # Find all the functions defined in this file whose names are
