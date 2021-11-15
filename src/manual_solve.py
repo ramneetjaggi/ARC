@@ -52,6 +52,48 @@ def solve_484b58aa(x):
             y[:, column]=new_column
     return y
 
+def solve_73251a56(x):
+    """
+    Steps Taken to fill the matrix
+    * Finding the diagnol element and then using np.diagnol
+    * As there is symmetry filling in y[j][i]=y[i][j] and vice versa if not 0
+    * Else calculating the diagnol perphery looking at 6 elements near y[i,j]
+        which is not diagnol or 0
+    """
+    y=x.copy()
+    rows,columns = np.shape(y)
+    diagnol_elements=np.unique(y.diagonal())
+    diagonol=[i  for i in diagnol_elements if i>0]
+    np.fill_diagonal(y,diagonol)
+    for i in range(rows):
+        for j in  range(columns):
+            if y[i][j]==0 and y[j][i]!=0 and i!=j :
+                y[i][j]=y[j][i]
+            elif y[j][i]==0 and y[i][j]!=0 and i!=j :
+                y[j][i]=y[i][j]
+            elif i!=j and y[i][j]==0 and y[j][i]==0 :
+                fill_ele=calculate_diagnol_periphery(i,j,y,diagonol)
+                y[i][j]=fill_ele
+                y[j][i]=fill_ele
+    return y
+
+def calculate_diagnol_periphery(i,j,y,diagonol):
+
+    near_diagnol_element=[]
+    if(y[i+1][j]!=0 and y[i+1][j]!=diagonol):
+        near_diagnol_element.append(y[i+1][j])
+    elif (y[i-1][j]!=0 and y[i-1][j]!=diagonol):
+        near_diagnol_element.append(y[i-1][j])
+    elif (y[i][j+1]!=0 and y[i][j+1]!=diagonol):
+     near_diagnol_element.append(y[i][j+1])
+    elif (y[i][j-1]!=0 and y[i][j-1]!=diagonol):
+        near_diagnol_element.append(y[i][j-1])
+    elif (y[i+2][j-1]!=0 and y[i+2][j-1]!=diagonol):
+        near_diagnol_element.append(y[i+2][j-1])
+    elif (y[i-1][j+2]!=0 and y[i-1][j+2]!=diagonol):
+        near_diagnol_element.append(y[i-1][j+2])
+    return max(set(near_diagnol_element), key = near_diagnol_element.count)
+
 def create_new_column(pattern,column_length):
     new_col_length=0
     new_column=[]
