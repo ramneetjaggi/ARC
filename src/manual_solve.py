@@ -4,6 +4,7 @@ import os, sys
 import json
 import numpy as np
 import re
+import math
 
 ### YOUR CODE HERE: write at least three functions which solve
 ### specific tasks by transforming the input x and returning the
@@ -19,7 +20,109 @@ import re
 # def solve_05269061(x):
 #     return x
 def solve_484b58aa(x):
-    return x
+    transpose_flag = False
+    column_first = [row[0] for row in x]
+    check_pattern_exists = np.where(np.array(column_first) == 0)
+    if len(check_pattern_exists[0]) > 1:
+        y = x.copy()
+        y = np.transpose(y)
+        transpose_flag = True
+    else:
+        y = x.copy()
+    rows, columns = np.shape(y)
+    pattern = []
+    k = 0
+    for row in y:
+        process_flag = 0
+        for element in row:
+            if element == 0:
+                process_flag = 1
+                break
+
+        if process_flag == 1:
+            pattern_size, pattern = findpatternsandsize(row)
+            deg = degree_of_rotation(row, pattern)
+            new_row = rotateArray(pattern, pattern_size, pattern, deg, rows)
+            y[k, :] = new_row
+
+        k += 1
+    if (transpose_flag):
+        return np.transpose(y)
+    else:
+        return y
+def findpatternsandsize(row):
+    row=getstringtofindapattern(row)
+    max_len = math.ceil(len(row) / 2)
+    for x in range(2, int(max_len)):
+        if row[0:x] == row[x:2*x] :
+            return x,row[0:x]
+            break
+
+def getstringtofindapattern(seq):
+    dict = {}
+    temp_list=[]
+    seq_length=len(seq)
+    length_counter=0
+    for i in seq:
+        if i !=0:
+            temp_list.append(i)
+            length_counter+=1
+        if i == 0:
+            dict[len(temp_list)]=temp_list
+            temp_list=[]
+            length_counter+=1
+        if length_counter==seq_length:
+            dict[len(temp_list)]=temp_list
+    final_list = dict[max(dict)]
+    return final_list
+
+# function to rotate array by d elements using temp array
+def rotateArray(arr, length_of_pattern,pattern, degree_rotate, length_of_row):
+    temp = []
+    i = 0
+    while (i < degree_rotate):
+        temp.append(arr[i])
+        i = i + 1
+    i = 0
+    while (degree_rotate < length_of_pattern):
+        arr[i] = arr[degree_rotate]
+        i = i + 1
+        degree_rotate = degree_rotate + 1
+    arr[:] = arr[: i] + temp
+    while (len(arr) < length_of_row):
+        arr.extend(arr)
+        if( length_of_pattern> (length_of_row - len(arr))):
+            seq_to_extend=length_of_row - len(arr)
+            arr_to_add = pattern[:seq_to_extend]
+            arr.extend(arr_to_add)
+    return arr
+def degree_of_rotation(row,pattern):
+
+    #get first index of a2
+    final_index=0
+    value = row[0]
+    pos = np.where(np.array(pattern) ==value)
+    if len(pos[0])!= 1:
+        #if first value is duplicated in pattern and second elemnet is 0
+        #try one by one if pattern and updated value owuld be equal
+        for i in range(len(pos[0])):
+            ppos = pos[0][i]
+            position=True
+            for j in row:
+                if j==0 or j==pattern[ppos]:
+                    if ppos+1 == len(pattern):
+                        ppos=0
+                    else:
+                        ppos +=1
+                else:
+                    position=False
+                    break
+            if position == True:
+                final_index = pos[0][i]
+                break
+    else:
+        final_index = pos[0][0]
+    return final_index
 
 def main():
     # Find all the functions defined in this file whose names are
