@@ -47,12 +47,56 @@ def solve_484b58aa(x):
                     else:
                         break
                 k +=1
-            new_column=create_new_column(pattern_list,columns)
+            new_column=create_new_column_484b58aa(pattern_list,columns)
             # Creating the new matrix column by column
             y[:, column]=new_column
     return y
 
-def create_new_column(pattern,column_length):
+def solve_73251a56(x):
+    """
+    Steps Taken to fill the matrix
+    * Finding the diagonal element and then using np.diagnol
+    * As there is symmetry filling in y[j][i]=y[i][j] and vice versa if not 0
+    * Else calculating the diagonal periphery looking at 6 elements near y[i,j]
+        which is not diagonal or 0
+    """
+    y=x.copy()
+    rows,columns = np.shape(y)
+    diagonal_elements=np.unique(y.diagonal())
+    diagonal=[i  for i in diagonal_elements if i>0]
+    np.fill_diagonal(y,diagonal)
+    for i in range(rows):
+        for j in  range(columns):
+            if y[i][j]==0 and y[j][i]!=0 and i!=j :
+                y[i][j]=y[j][i]
+            elif y[j][i]==0 and y[i][j]!=0 and i!=j :
+                y[j][i]=y[i][j]
+            elif i!=j and y[i][j]==0 and y[j][i]==0 :
+                fill_ele=calculate_diagnol_periphery_73251a56(i,j,y,diagonal)
+                y[i][j]=fill_ele
+                y[j][i]=fill_ele
+    return y
+
+def calculate_diagnol_periphery_73251a56(i,j,y,diagonol):
+    """Looking at 6 directions to the current y[i,j] location
+    which is not equal to the diagonal element and append it to the list"""
+    near_diagnol_element=[]
+    if(y[i+1][j]!=0 and y[i+1][j]!=diagonol):
+        near_diagnol_element.append(y[i+1][j])
+    elif (y[i-1][j]!=0 and y[i-1][j]!=diagonol):
+        near_diagnol_element.append(y[i-1][j])
+    elif (y[i][j+1]!=0 and y[i][j+1]!=diagonol):
+     near_diagnol_element.append(y[i][j+1])
+    elif (y[i][j-1]!=0 and y[i][j-1]!=diagonol):
+        near_diagnol_element.append(y[i][j-1])
+    elif (y[i+2][j-1]!=0 and y[i+2][j-1]!=diagonol):
+        near_diagnol_element.append(y[i+2][j-1])
+    elif (y[i-1][j+2]!=0 and y[i-1][j+2]!=diagonol):
+        near_diagnol_element.append(y[i-1][j+2])
+    # Return unique color found
+    return max(set(near_diagnol_element), key = near_diagnol_element.count)
+
+def create_new_column_484b58aa(pattern,column_length):
     new_col_length=0
     new_column=[]
     while (new_col_length<column_length):
