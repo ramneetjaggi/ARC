@@ -27,6 +27,14 @@ that could be used to fill the blank spaces
     * solve_c3f564a4 :For this task there was symmetry in rows and columns but not via the diagonal.The pattern was of same
         length and same fashioned list elements through out the matrix. So it was easy to find a pattern that suits the whole grid
         and use the same to find which color to use to fill in the blank.
+        
+Goal: To fill in the blank spaces without breaking pattern.
+To quote from the On the Measure of Intelligence from Francois Chollet -"the only intelligence at work here is the engineer’s"
+The solutions that are mentioned in this might not work for edge cases as we assume the patterns and grid size
+will be same. The algorithm is trained to solve few test scenarios and might not work well for a vast variety of samples .
+Also the measure of success is  binary either the whole grid matches or it does not and the result is True or False respectively.
+While initially developing a solution the algorithm might generate a grid as close as 90% matching to the expected output, but that
+is not taken into account.
 """
 
 
