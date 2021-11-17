@@ -10,7 +10,9 @@ import re
 
 
 # Solve  functions commonalities or differences among them .
-"""The 3 tasks that are solved as a part of this assignment had few common grounds 
+"""
+Goal: To fill in the blank spaces without breaking pattern.
+The 3 tasks that are solved as a part of this assignment had few common grounds 
     * All 3 could be solved with the use use of numpy and basic python loop knowledge 
     * All had a pattern which although different from each other while 
         carefully studying the matrix solution could be formed. 

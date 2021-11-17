@@ -5,6 +5,14 @@
 All of these were solved using Numpy and with basic knowledge of conditional
 and grid traversing loops</p>
 
+##### Goal: To fill in the blank spaces without breaking pattern.
+<p>To quote from the On the Measure of Intelligence from Francois Chollet -"the only intelligence at work here is the engineer’s"
+The solutions that are mentioned in this might not work for edge cases as we assume the patterns and grid size
+will be same. The algorithm is trained to solve few test scenarios and might not work well for a vast variety of samples .
+Also the measure of success is  binary either the whole grid matches or it does not and the result is True or False respectively.
+While initially developing a solution the algorithm might generate a grid as close as 90% matching to the expected output, but that
+is not taken into account.</p>
+
 ### solve_484b58aa
 <p>This problem has a varied length pattern found in each column. Task at hand is to find the
     pattern for each and then using the same to fill in the black spaces.
