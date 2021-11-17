@@ -1,3 +1,36 @@
+## Assignment 3
+### Ramneet Jaggi(21252485)
+
+<p>For the purpose of assignment 3 below tasks were chosen.
+All of these were solved using Numpy and with basic knowledge of conditional
+and grid traversing loops</p>
+
+### solve_484b58aa
+<p>This problem has a varied length pattern found in each column. Task at hand is to find the
+    pattern for each and then using the same to fill in the black spaces.
+    Real challenge was to find a pattern and its size as each each row had its unique pattern and colors.</p>
+
+![484b58aa.png](484b58aa.png)
+
+###  solve_73251a56
+<p>The symmetry was a key feature for this problem. The diagonal running from left to right had same
+    element on the opposite sides. The left over were the ones that did not find a non empty  cell opposite to diagonal element.
+    For left over ones one has to look around to find a fitting color to fill in the blank spot with.</p>
+
+![img_1.png](img_1.png)
+
+###  solve_c3f564a4
+
+<p>The grids for this problem had same length of pattern re-occurring in the whole
+    matrix .The ways which could be used solve this one are - Symmetry in rows and columns , pattern repeats
+    with the same length over rows and columns or the second way was to search for the a non blank/ not 0 cell either in the
+    pattern and if match was found the same in the pattern and populate the blank cell with one color ahead per the
+    pattern.</p>
+
+![484b58aa.png](c3f564a4.png)
+
+
+*************************************************************************
 # The Abstraction and Reasoning Corpus (ARC)
 
 This repository contains the ARC task data, as well as a browser-based interface for humans to try their hand at solving the tasks manually.
